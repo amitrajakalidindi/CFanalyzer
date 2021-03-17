@@ -5,14 +5,18 @@ const request = require('request');
 
 
 router.get('/', (req, res) => {
-	function callback(list,list1){
-		res.render('home', {
-			username: req.cookies.user,
-			accepted: list,
-			problemscount: list1,
-		});
+	var calls = 0;
+	var verdictList = [], contestList = [];
+	function callback(){
+		calls++;
+		if(calls == 1){
+			res.render('home', {
+				username: req.cookies.user,
+				problemVerdicts: verdictList,
+				problemscount: contestList,
+			});
+		}
 	}
-	var list=[],list1=[];
 	request('https://codeforces.com/api/user.status?handle=wrong_answer', { json: true }, (err, res, body) => {
 		if (err) { return console.log(err); }
 		var ok = 0, ce = 0, re = 0, wa = 0, tle = 0, me = 0;
@@ -37,13 +41,10 @@ router.get('/', (req, res) => {
 				me++;
 			}
 		}
-		list = [ok, ce, re, wa, tle, me];
-		
-	});
-	request('https://codeforces.com/api/user.status?handle=wrong_answer',{json:true},(err,res,body)=>{
-		if(err) { return console.log(err);}
-		list1=[0,0,0,0,0,0,0,0,0];
-		var submissions=body.result;
+		verdictList = [ok, ce, re, wa, tle, me];
+
+
+		contestList=[0,0,0,0,0,0,0,0,0];
 		var mymap = new Map();
 		for(var i = 0; i < submissions.length; i++)
 		{
@@ -61,9 +62,10 @@ router.get('/', (req, res) => {
 		}
 		for(const [key,value] of mymap.entries())
 		{
-			list1[value]+=1;
+			contestList[value]+=1;
 		}
-		callback(list,list1);
+		callback();
+		
 	});
 });
 

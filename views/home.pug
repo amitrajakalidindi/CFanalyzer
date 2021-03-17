@@ -33,19 +33,19 @@ html
                                 a(href='/signin' style='font-size:22px; color:black; text-decoration:none')='Sign in'
         
         div(class="chart-container" style="margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:500px; display:inline-block")
-            canvas(id='myChart')
+            canvas(id='verdictChart')
         div(class="chart-container" style="margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:500px; display:inline-block")
-            canvas(id='mychart')
+            canvas(id='contestChart')
 
         script.
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var myChart = new Chart(ctx, {
+            var ctx = document.getElementById('verdictChart').getContext('2d');
+            var verdictChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: ['Accepted', 'Compilation Error', 'Runtime Error', 'Wrong Answer', 'Time Limit Exceeded', 'Memory Limit Exceeded'],
                     datasets: [{
                         label: '# of Votes',
-                        data: Array(#{accepted}),
+                        data: Array(#{problemVerdicts}),
                         backgroundColor: [
                             'rgba(75, 192, 192, 0.5)',
                             'rgba(54, 162, 235, 0.5)',
@@ -76,8 +76,8 @@ html
                 }
             });     
         script.
-            var ctx = document.getElementById('mychart').getContext('2d');
-            var myChart = new Chart(ctx, {
+            var ctx = document.getElementById('contestChart').getContext('2d');
+            var contestChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['0', '1', '2', '3', '4', '5','6','7','8'],
