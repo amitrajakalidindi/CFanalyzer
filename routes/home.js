@@ -5,17 +5,15 @@ const request = require('request');
 
 
 router.get('/', (req, res) => {
-	var calls = 0;
-	var verdictList = [], contestList = [];
+	var verdictList = [], contestList = [], tagList = [], tagCountList = [];
 	function callback(){
-		calls++;
-		if(calls == 1){
-			res.render('home', {
-				username: req.cookies.user,
-				problemVerdicts: verdictList,
-				problemscount: contestList,
-			});
-		}
+		res.render('home', {
+			username: req.cookies.user,
+			problemVerdicts: verdictList,
+			problemscount: contestList,
+			tagList: tagList.toString().split(" ").join(""),
+			tagCountList: tagCountList
+		});
 	}
 	request('https://codeforces.com/api/user.status?handle=wrong_answer', { json: true }, (err, res, body) => {
 		if (err) { return console.log(err); }
@@ -43,6 +41,29 @@ router.get('/', (req, res) => {
 		}
 		verdictList = [ok, ce, re, wa, tle, me];
 
+
+		var tagMap = new Map();
+		for(var i = 0; i < submissions.length; i++)
+		{
+			for(var j = 0; j < submissions[i].problem.tags.length; j++){
+				var tag = submissions[i].problem.tags[j];
+				if(tagMap.has(tag))
+				{
+					var cnt = tagMap.get(tag);
+					tagMap.set(tag, cnt + 1);
+				}
+				else{
+					tagMap.set(tag, 1);
+				}
+			}
+		}
+
+		for(const [key,value] of tagMap.entries())
+		{
+			tagList.push(key.split(" ").join("").replace('*','').toString());
+			tagCountList.push(value);
+		}
+		console.log(typeof(tagList[0]))
 
 		contestList=[0,0,0,0,0,0,0,0,0];
 		var mymap = new Map();

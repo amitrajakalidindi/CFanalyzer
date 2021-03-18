@@ -32,10 +32,15 @@ html
                             li(class='nav-item')
                                 a(href='/signin' style='font-size:22px; color:black; text-decoration:none')='Sign in'
         
-        div(class="chart-container" style="margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:500px; display:inline-block")
-            canvas(id='verdictChart')
-        div(class="chart-container" style="margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:500px; display:inline-block")
-            canvas(id='contestChart')
+        div(class='container d-flex justify-content-center')
+            div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                canvas(id='verdictChart')
+        div(class='container d-flex justify-content-center')
+            div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                canvas(id='contestChart')
+        div(class='container d-flex justify-content-center')
+            div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                canvas(id='tagChart')
 
         script.
             var ctx = document.getElementById('verdictChart').getContext('2d');
@@ -113,6 +118,50 @@ html
                     }
                 }
             });
+        script.
+            var ctx = document.getElementById('tagChart').getContext('2d');
+            var tagChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Problem types',
+                        data: Array(#{tagCountList}),
+                        backgroundColor: [],
+                        borderColor: [],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+            
+            function addTagData() {
+                var tags = !{JSON.stringify(tagList)};
+                tags = tags.split(",");
+                var r, g, b;
+                for(var i = 0; i < tags.length; i++){
+                    r = Math.round(Math.random()*255);
+                    g = Math.round(Math.random()*255);
+                    b = Math.round(Math.random()*255);
+                    if(tagChart.data.datasets[0].backgroundColor.includes(`rgba(${r}, ${g}, ${b}, 0.5)`)){
+                        i--;
+                        continue;
+                    }
+                    tagChart.data.datasets[0].backgroundColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`);
+                    tagChart.data.datasets[0].borderColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`); 
+                    tagChart.data.labels.push(tags[i]);              
+                }
+                tagChart.update();
+            }
+
+            addTagData();
 
         
-    
