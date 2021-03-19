@@ -31,16 +31,21 @@ html
                         else
                             li(class='nav-item')
                                 a(href='/signin' style='font-size:22px; color:black; text-decoration:none')='Sign in'
-        
-        div(class='container d-flex justify-content-center')
-            div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
-                canvas(id='verdictChart')
-        div(class='container d-flex justify-content-center')
-            div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
-                canvas(id='contestChart')
-        div(class='container d-flex justify-content-center')
-            div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
-                canvas(id='tagChart')
+        div(class='container col-12 col-sm-6 offset-sm-3 shadow p-3 mb-5 bg-white rounded' style='margin-top:100px')
+            form(action='/' method='post')
+                div(class='form-group col-sm-6 offset-sm-3')
+                    input(type='text' class='form-control form-control-lg' id='username' placeholder='Enter a user name' name='username' required)
+
+        if(search)
+            div(class='container d-flex justify-content-center')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                    canvas(id='verdictChart')
+            div(class='container d-flex justify-content-center')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                    canvas(id='contestChart')
+            div(class='container d-flex justify-content-center')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                    canvas(id='tagChart')
 
         script.
             var ctx = document.getElementById('verdictChart').getContext('2d');
