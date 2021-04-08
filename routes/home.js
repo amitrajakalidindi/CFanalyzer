@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
 	var username = req.body.username;
-	var verdictList = [], contestList = [], tagList = [], tagCountList = [], langList = [], langCountList = [];
+	var verdictList = [], contestList = [], tagList = [], tagCountList = [], langList = [], langCountList = [], c_ratings=[],c_ratingscount=[],p_ratings=[],p_ratingscount=[];
 	function callback(){
 		res.render('home', {
 			username: req.cookies.user,
@@ -23,7 +23,11 @@ router.post('/', (req, res) => {
 			tagList: tagList.toString().split(" ").join(""),
 			tagCountList: tagCountList,
 			langList: langList.toString().split(" ").join(""),
-			langCountList: langCountList
+			langCountList: langCountList,
+			c_ratingscount: c_ratingscount,
+			c_ratings: c_ratings,
+			p_ratingscount: p_ratingscount,
+			p_ratings: p_ratings
 		});
 	}
 	function callback2(){
@@ -124,6 +128,49 @@ router.post('/', (req, res) => {
 			{
 				contestList[value]+=1;
 			}
+			var c_ratingsmap = new Map();
+			var p_ratingsmap = new Map();
+			for(var i=0;i<submissions.length;i++)
+			{
+				if(submissions[i].author.participantType=="CONTESTANT")
+				{
+					if(c_ratingsmap.has(submissions[i].problem.rating))
+					{
+						var a=c_ratingsmap.get(submissions[i].problem.rating);
+						c_ratingsmap.set(submissions[i].problem.rating,a+1);
+					}
+						
+					else 
+					{
+						c_ratingsmap.set(submissions[i].problem.rating,1);
+					}
+				}
+				else 
+				{
+					if(p_ratingsmap.has(submissions[i].problem.rating))
+					{
+						var a=p_ratingsmap.get(submissions[i].problem.rating);
+						p_ratingsmap.set(submissions[i].problem.rating,a+1);
+					}
+						
+					else 
+					{
+						p_ratingsmap.set(submissions[i].problem.rating,1);
+					}
+				}
+			}
+			
+			for(const [key,value] of c_ratingsmap.entries())
+			{
+				c_ratings.push(key);
+				c_ratingscount.push(value);
+			}
+			for(const [key,value] of p_ratingsmap.entries())
+			{
+				p_ratings.push(key);
+				p_ratingscount.push(value);
+			}
+
 			callback();
 		}
 		

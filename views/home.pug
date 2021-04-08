@@ -41,6 +41,12 @@ html
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
                     canvas(id='verdictChart')
             div(class='container d-flex justify-content-center')
+                
+                
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                    input(type="button" onclick="update()" value="show practice tags" id="ratingsbutton")
+                    canvas(id='ratingschart')
+            div(class='container d-flex justify-content-center')
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
                     canvas(id='langChart')
             div(class='container d-flex justify-content-center')
@@ -49,6 +55,7 @@ html
             div(class='container d-flex justify-content-center')
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
                     canvas(id='tagChart')
+    
 
         script.
             var ctx = document.getElementById('verdictChart').getContext('2d');
@@ -196,7 +203,8 @@ html
                     }
                 }
             });
-            
+       
+                
             function addTagData() {
                 var tags = !{JSON.stringify(tagList)};
                 tags = tags.split(",");
@@ -217,5 +225,53 @@ html
             }
 
             addTagData();
+        
+        script.
+            var ctx = document.getElementById('ratingschart').getContext('2d');
+            var ratingschart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Array(#{c_ratings}),
+                    datasets: [{
+                        label: 'Problems solved in a contest',
+                        data: Array(#{c_ratingscount}),
+                        backgroundColor: 'red',
+                        borderColor: 'red',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            }); 
 
+            function update()
+            {
+                var elem = document.getElementById("ratingsbutton");
+                if(elem.value=="show contest tags")
+                {
+                    elem.value="show practice tags";
+                    ratingschart.data.labels=Array(#{c_ratings});
+                    ratingschart.data.datasets[0].data=Array(#{c_ratingscount});
+                    ratingschart.data.datasets[0].label='problems solved in contest';
+                    //ratingschart.data.labels=Array(#{c_ratings});
+                    ratingschart.update();
+                    
+                }
+                else 
+                {
+                    elem.value="show contest tags";
+                    ratingschart.data.datasets[0].data=Array(#{p_ratingscount});
+                    ratingschart.data.datasets[0].label='problems solved in practice';
+                    //ratingschart.data.labels=Array(#{p_ratings});
+                    ratingschart.update();
+                    
+                }
+            }
         
