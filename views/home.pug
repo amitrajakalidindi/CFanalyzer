@@ -42,6 +42,9 @@ html
                     canvas(id='verdictChart')
             div(class='container d-flex justify-content-center')
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                    canvas(id='langChart')
+            div(class='container d-flex justify-content-center')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
                     canvas(id='contestChart')
             div(class='container d-flex justify-content-center')
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
@@ -85,6 +88,52 @@ html
                     }
                 }
             });     
+        script.
+            var ctx = document.getElementById('langChart').getContext('2d');
+            var langChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Languages Used',
+                        data: Array(#{langCountList}),
+                        backgroundColor: [],
+                        borderColor: [],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+            
+            function addLangData() {
+                var langs = !{JSON.stringify(langList)};
+                langs = langs.split(",");
+                var r, g, b;
+                for(var i = 0; i < langs.length; i++){
+                    r = Math.round(Math.random()*255);
+                    g = Math.round(Math.random()*255);
+                    b = Math.round(Math.random()*255);
+                    if(langChart.data.datasets[0].backgroundColor.includes(`rgba(${r}, ${g}, ${b}, 0.5)`)){
+                        i--;
+                        continue;
+                    }
+                    langChart.data.datasets[0].backgroundColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`);
+                    langChart.data.datasets[0].borderColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`); 
+                    langChart.data.labels.push(langs[i]);              
+                }
+                langChart.update();
+            }
+
+            addLangData();
+            
         script.
             var ctx = document.getElementById('contestChart').getContext('2d');
             var contestChart = new Chart(ctx, {

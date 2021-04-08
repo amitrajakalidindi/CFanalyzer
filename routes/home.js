@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
 	var username = req.body.username;
-	var verdictList = [], contestList = [], tagList = [], tagCountList = [];
+	var verdictList = [], contestList = [], tagList = [], tagCountList = [], langList = [], langCountList = [];
 	function callback(){
 		res.render('home', {
 			username: req.cookies.user,
@@ -21,7 +21,9 @@ router.post('/', (req, res) => {
 			problemVerdicts: verdictList,
 			problemscount: contestList,
 			tagList: tagList.toString().split(" ").join(""),
-			tagCountList: tagCountList
+			tagCountList: tagCountList,
+			langList: langList.toString().split(" ").join(""),
+			langCountList: langCountList
 		});
 	}
 	function callback2(){
@@ -57,15 +59,37 @@ router.post('/', (req, res) => {
 			}
 			verdictList = [ok, ce, re, wa, tle, me];
 
+			var langMap = new Map();
+			var language, cnt;
+			for(var i = 0; i < submissions.length; i++)
+			{
+				language = submissions[i].programmingLanguage;
+				if(langMap.has(language))
+				{
+					cnt = langMap.get(language);
+					langMap.set(language, cnt + 1);
+				}
+				else{
+					langMap.set(language, 1);
+				}
+			}
+
+			for(const [key,value] of langMap.entries())
+			{
+				langList.push(key.split(" ").join("").replace('*','').toString());
+				langCountList.push(value);
+			}
+
 
 			var tagMap = new Map();
+			var tag, cnt;
 			for(var i = 0; i < submissions.length; i++)
 			{
 				for(var j = 0; j < submissions[i].problem.tags.length; j++){
-					var tag = submissions[i].problem.tags[j];
+					tag = submissions[i].problem.tags[j];
 					if(tagMap.has(tag))
 					{
-						var cnt = tagMap.get(tag);
+						cnt = tagMap.get(tag);
 						tagMap.set(tag, cnt + 1);
 					}
 					else{
