@@ -38,22 +38,33 @@ html
 
         if(search)
             div(class='container d-flex justify-content-center')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                table 
+                    tr 
+                        td handle: #{handle}
+                    tr 
+                        td rating: #{rating}
+                        td maxrating: #{maxrating}
+                    tr 
+                        td rank: #{rank}
+                        td maxrank: #{maxrank}
+                    tr 
+                        td no of contests: #{noofcontests}
+
+
+            div(class='container d-flex justify-content-center' style="float:center")
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
                     canvas(id='verdictChart')
-            div(class='container d-flex justify-content-center')
-                
-                
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
+                    canvas(id='langChart')
+            div(class='container d-flex justify-content-center' style="float:center")    
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
                     input(type="button" onclick="update()" value="show practice tags" id="ratingsbutton")
                     canvas(id='ratingschart')
-            div(class='container d-flex justify-content-center')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
-                    canvas(id='langChart')
-            div(class='container d-flex justify-content-center')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
+                    p
                     canvas(id='contestChart')
             div(class='container d-flex justify-content-center')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:600px; width:800px')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:800px')
                     canvas(id='tagChart')
     
 
@@ -148,7 +159,7 @@ html
                 data: {
                     labels: ['0', '1', '2', '3', '4', '5','6','7','8'],
                     datasets: [{
-                        label: 'Problems solved in a contest',
+                        label: 'Problems solved per  contest',
                         data: Array(#{problemscount}),
                         backgroundColor: [
                             'rgba(75, 192, 192, 0.5)',
@@ -182,7 +193,7 @@ html
         script.
             var ctx = document.getElementById('tagChart').getContext('2d');
             var tagChart = new Chart(ctx, {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
                     labels: [],
                     datasets: [{
@@ -233,7 +244,7 @@ html
                 data: {
                     labels: Array(#{c_ratings}),
                     datasets: [{
-                        label: 'Problems solved in a contest',
+                        label: 'Problems solved per contest',
                         data: Array(#{c_ratingscount}),
                         backgroundColor: 'red',
                         borderColor: 'red',

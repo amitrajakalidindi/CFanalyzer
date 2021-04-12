@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
 	var username = req.body.username;
 	var verdictList = [], contestList = [], tagList = [], tagCountList = [], langList = [], langCountList = [], c_ratings=[],c_ratingscount=[],p_ratings=[],p_ratingscount=[];
+	var handle,rank,rating,maxrating,maxrank,noofcontests=0;
 	function callback(){
 		res.render('home', {
 			username: req.cookies.user,
@@ -27,12 +28,64 @@ router.post('/', (req, res) => {
 			c_ratingscount: c_ratingscount,
 			c_ratings: c_ratings,
 			p_ratingscount: p_ratingscount,
-			p_ratings: p_ratings
+			p_ratings: p_ratings,
+			handle:handle,
+			rank:rank,
+			rating:rating,
+			maxrating:maxrating,
+			maxrank:maxrank,
+			noofcontests:noofcontests,
 		});
 	}
 	function callback2(){
 		res.redirect('/');
 	}
+	request(`https://codeforces.com/api/user.rating?handle=${username}`, { json: true }, (err, res, body) => {
+		if (err) { return console.log(err); }
+		if(body.status == "FAILED"){
+			callback2();
+		}
+		else 
+		{
+			var contests=body.result;
+			for(var i=0;i<contests.length;i++)
+			{
+				noofcontests+=1
+			}
+		}
+	});
+	request(`https://codeforces.com/api/user.info?handles=${username}`, { json: true }, (err, res, body) => {
+		if (err) { return console.log(err); }
+		if(body.status == "FAILED"){
+			callback2();
+		}
+		else 
+		{
+			var data=body.result;
+			data=data[0];
+			rating=data.rating;
+			rank=data.rank;
+			handle=data.handle;
+			maxrating=data.maxRating;
+			maxrank=data.maxRank;
+		}
+	});
+	request(`https://codeforces.com/api/user.info?handles=${username}`, { json: true }, (err, res, body) => {
+		if (err) { return console.log(err); }
+		if(body.status == "FAILED"){
+			callback2();
+		}
+		else 
+		{
+			var data=body.result;
+			data=data[0];
+			rating=data.rating;
+			rank=data.rank;
+			handle=data.handle;
+			maxrating=data.maxRating;
+			maxrank=data.maxRank;
+		}
+	});
 	request(`https://codeforces.com/api/user.status?handle=${username}`, { json: true }, (err, res, body) => {
 		if (err) { return console.log(err); }
 		if(body.status == "FAILED"){
@@ -132,6 +185,8 @@ router.post('/', (req, res) => {
 			var p_ratingsmap = new Map();
 			for(var i=0;i<submissions.length;i++)
 			{
+				if(submissions[i].verdict!="OK")
+					continue;
 				if(submissions[i].author.participantType=="CONTESTANT")
 				{
 					if(c_ratingsmap.has(submissions[i].problem.rating))
