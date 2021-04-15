@@ -1,3 +1,6 @@
+// problems ratings chart tags should be in ascending order
+// buttons in ratings charts are not working properly
+// colors of second user in langchart should be updated
 doctype html
 html 
     head
@@ -35,41 +38,68 @@ html
                             li(class='nav-item')
                                 a(href='/signin' style='font-size:22px; color:black; text-decoration:none')='Sign in'
         div(class='container col-12 col-sm-6 offset-sm-3 shadow p-3 mb-5 bg-white rounded' style='margin-top:100px')
-            form(action='/' method='post')
+            form(action='/compare' method='post')
                 div(class='form-group col-sm-6 offset-sm-3')
-                    input(type='text' class='form-control form-control-lg' id='username' placeholder='Enter a user name' name='username' required)
+                    input(type='text' class='form-control form-control-lg' id='handle1' placeholder='Enter first handle' name='handle1' required)
+                    input(type='text' class='form-control form-control-lg' id='handle2' placeholder='Enter second handle' name='handle2' required)
+                input(type="submit" value="submit" )
 
         if(search)
             div(class='container d-flex justify-content-center')
-                table 
+                table
                     tr 
-                        td handle: #{handle}
+                        td handle: 
+                        td #{handle}
+                        td #{Handle}
                     tr 
-                        td rating: #{rating}
-                        td maxrating: #{maxrating}
+                        td rating:  
+                        td #{rating}
+                        td #{Rating}
+                    tr
+                        td maxrating:  
+                        td #{maxrating}
+                        td #{Maxrating}
                     tr 
-                        td rank: #{rank}
-                        td maxrank: #{maxrank}
+                        td rank:  
+                        td #{rank}
+                        td #{Rank}
+                    tr
+                        td maxrank:  
+                        td #{maxrank}
+                        td #{Maxrank}
                     tr 
-                        td no of contests: #{noofcontests}
+                        td no of contests:  
+                        td #{noofcontests}
+                        td #{Noofcontests}
+
 
 
             div(class='container d-flex justify-content-center' style="float:center")
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
                     canvas(id='verdictChart')
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
+                    canvas(id='vverdictChart')
+            div(class='container d-flex justify-content-center' style="float:center")
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
                     canvas(id='langChart')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
+                    canvas(id='LangChart')
             div(class='container d-flex justify-content-center' style="float:center")    
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    input(type="button" onclick="update()" value="show practice tags" id="ratingsbutton")
+                    input(type="button" onclick="uvpdate()" value="show practice tags" id="ratingsbutton")
                     canvas(id='ratingschart')
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
+                    input(type="button" onclick="uupdate()" value="show practice tags" id="rratingsbutton")
+                    canvas(id='Ratingschart')
+            div(class='container d-flex justify-content-center' style="float:center")
                 div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
                     p
                     canvas(id='contestChart')
-            div(class='container d-flex justify-content-center')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:800px')
-                    canvas(id='tagChart')
-    
+                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
+                    p
+                    canvas(id='ContestChart')
+                
+
 
         script.
             var ctx = document.getElementById('verdictChart').getContext('2d');
@@ -193,52 +223,7 @@ html
                     }
                 }
             });
-        script.
-            var ctx = document.getElementById('tagChart').getContext('2d');
-            var tagChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Problem types',
-                        data: Array(#{tagCountList}),
-                        backgroundColor: [],
-                        borderColor: [],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-       
-                
-            function addTagData() {
-                var tags = !{JSON.stringify(tagList)};
-                tags = tags.split(",");
-                var r, g, b;
-                for(var i = 0; i < tags.length; i++){
-                    r = Math.round(Math.random()*255);
-                    g = Math.round(Math.random()*255);
-                    b = Math.round(Math.random()*255);
-                    if(tagChart.data.datasets[0].backgroundColor.includes(`rgba(${r}, ${g}, ${b}, 0.5)`)){
-                        i--;
-                        continue;
-                    }
-                    tagChart.data.datasets[0].backgroundColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`);
-                    tagChart.data.datasets[0].borderColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`); 
-                    tagChart.data.labels.push(tags[i]);              
-                }
-                tagChart.update();
-            }
-
-            addTagData();
+        
         
         script.
             var ctx = document.getElementById('ratingschart').getContext('2d');
@@ -265,7 +250,7 @@ html
                 }
             }); 
 
-            function update()
+            function uvpdate()
             {
                 var elem = document.getElementById("ratingsbutton");
                 if(elem.value=="show contest tags")
@@ -281,6 +266,7 @@ html
                 else 
                 {
                     elem.value="show contest tags";
+                    ratingschart.data.labels=Array(#{p_ratings});
                     ratingschart.data.datasets[0].data=Array(#{p_ratingscount});
                     ratingschart.data.datasets[0].label='problems solved in practice';
                     //ratingschart.data.labels=Array(#{p_ratings});
@@ -288,4 +274,186 @@ html
                     
                 }
             }
+        
+        
+        //second user charts start here
+        //second
+        //second
+
+
+        script.
+            var ctx = document.getElementById('vverdictChart').getContext('2d');
+            var verdictChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Accepted', 'Compilation Error', 'Runtime Error', 'Wrong Answer', 'Time Limit Exceeded', 'Memory Limit Exceeded'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: Array(#{vverdictList}),
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });     
+        script.
+            var ctx = document.getElementById('LangChart').getContext('2d');
+            var langChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Languages Used',
+                        data: Array(#{LangCountList}),
+                        backgroundColor: "red",
+                        borderColor: [],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+            
+            function AddLangData() {
+                var langs = !{JSON.stringify(LangList)};
+                langs = langs.split(",");
+                var r, g, b;
+                for(var i = 0; i < langs.length; i++){
+                    r = Math.round(Math.random()*255);
+                    g = Math.round(Math.random()*255);
+                    b = Math.round(Math.random()*255);
+                    if(LangChart.data.datasets[0].backgroundColor.includes(`rgba(${r}, ${g}, ${b}, 0.5)`)){
+                        i--;
+                        continue;
+                    }
+                    LangChart.data.datasets[0].backgroundColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`);
+                    LangChart.data.datasets[0].borderColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`); 
+                    LangChart.data.labels.push(langs[i]);              
+                }
+                LangChart.update();
+            }
+
+            //AddLangData();
+            
+        script.
+            var ctx = document.getElementById('ContestChart').getContext('2d');
+            var contestChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['0', '1', '2', '3', '4', '5','6','7','8'],
+                    datasets: [{
+                        label: 'Problems solved per  contest',
+                        data: Array(#{Problemscount}),
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        
+        
+        script.
+            var ctx = document.getElementById('Ratingschart').getContext('2d');
+            var ratingschart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Array(#{C_ratings}),
+                    datasets: [{
+                        label: 'Problems solved per contest',
+                        data: Array(#{C_ratingscount}),
+                        backgroundColor: 'red',
+                        borderColor: 'red',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            }); 
+
+            function uupdate()
+            {
+                var elem = document.getElementById("rratingsbutton");
+                if(elem.value=="show contest tags")
+                {
+                    elem.value="show practice tags";
+                    Ratingschart.data.labels=Array(#{C_ratings});
+                    Ratingschart.data.datasets[0].data=Array(#{C_ratingscount});
+                    Ratingschart.data.datasets[0].label='problems solved in contest';
+                    //ratingschart.data.labels=Array(#{C_ratings});
+                    Ratingschart.update();
+                    
+                }
+                else 
+                {
+                    elem.value="show contest tags";
+                    Ratingschart.data.labels=Array(#{P_ratings});
+                    Ratingschart.data.datasets[0].data=Array(#{P_ratingscount});
+                    Ratingschart.data.datasets[0].label='problems solved in practice';
+                    //ratingschart.data.labels=Array(#{P_ratings});
+                    Ratingschart.update();
+                    
+                }
+            }
+        
+
         
