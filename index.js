@@ -9,6 +9,7 @@ var signin = require('./routes/signin.js');
 var signup = require('./routes/signup.js');
 var signout = require('./routes/signout.js');
 var compare = require('./routes/compare.js');
+var suggestions = require('./routes/suggestions.js');
 
 var app = express();
 
@@ -25,5 +26,6 @@ app.use('/signin', signin);
 app.use('/signup', signup);
 app.use('/signout', signout);
 app.use('/compare',compare);
+app.use('/suggestions',suggestions);
 
 app.listen(process.env.PORT || 3000);
