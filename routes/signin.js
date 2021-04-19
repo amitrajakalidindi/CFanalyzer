@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
 			})
         }
 	}
-	user.find({ $and: [ {email:email}, {password:password} ] }, (err, res) => {
+	user.find({ $and: [ {email:email}, {password:password}, {verified:true} ] }, (err, res) => {
 	   	if(err){
 	   		console.log(err);
 	   	}

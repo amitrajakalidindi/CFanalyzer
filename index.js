@@ -10,6 +10,8 @@ var signup = require('./routes/signup.js');
 var signout = require('./routes/signout.js');
 var compare = require('./routes/compare.js');
 var suggestions = require('./routes/suggestions.js');
+var group = require('./routes/group.js');
+var verification = require('./routes/verification.js');
 
 var app = express();
 
@@ -27,5 +29,7 @@ app.use('/signup', signup);
 app.use('/signout', signout);
 app.use('/compare',compare);
 app.use('/suggestions',suggestions);
+app.use('/groups', group)
+app.use('/userVerification', verification);
 
 app.listen(process.env.PORT || 3000);

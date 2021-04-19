@@ -41,20 +41,7 @@ html
                                         a(class='dropdown-item' href='/signout')='Sign out'
                         else
                             li(class='nav-item')
-                                a(href='/signup' style='font-size:22px; color:black; text-decoration:none')='Sign up'
-        div(class='container col-12 col-sm-6 offset-sm-3 shadow p-3 mb-5 bg-white rounded' style='margin-top:150px')
-            h1(style='text-align:center')='Login'
-            form(action='/signin' method='post' class='pt-sm-5')
-                div(class='form-group col-sm-10 offset-sm-1')
-                    label(for='siemail' class='col-form-label')='Email'
-                    input(type='email' class='form-control form-control-lg' id='siemail' placeholder='Enter email' name='siemail' required)
-                div(class='form-group col-sm-10 offset-sm-1')
-                    label(for='sipswd' class='col-form-label')='Password'
-                    input(type='password' class='form-control form-control-lg' id='sipswd' placeholder='Enter password' name='sipswd' required)
-                if(loginFailed)
-                    p(class='text-danger col-sm-10 offset-sm-1')='Invalid email or password'
-                div(class='d-flex justify-content-center pt-sm-3')
-                    button(type='submit' class='btn btn-dark')='Submit'
-                div(class='d-flex justify-content-center pt-sm-3' style='padding-bottom:50px')
-                    a(href='/signup')='Create new account'
-            
+                                a(href='/signin' style='font-size:22px; color:black; text-decoration:none')='Sign in'
+        div(class='container shadow p-3 mb-5 bg-white rounded' style='margin-top:200px')
+            h3(style='text-align:center')='Please verify your email address'
+            h5(style='text-align:center')='An email was sent to the linked email address for verification'

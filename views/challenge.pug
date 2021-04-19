@@ -12,6 +12,9 @@ html
         script(src='https://kit.fontawesome.com/a076d05399.js')
         script(src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0')
         title='CFanalyzer'
+        style
+            tr:nth-child(even)
+                background-color:LightGray
     body(style="font-family: 'Inter var',sans-serif")
         nav(class='navbar navbar-expand-lg fixed-top d-flex justify-content-between' style='background-color: #F5F5F5')
             div
@@ -41,20 +44,18 @@ html
                                         a(class='dropdown-item' href='/signout')='Sign out'
                         else
                             li(class='nav-item')
-                                a(href='/signup' style='font-size:22px; color:black; text-decoration:none')='Sign up'
-        div(class='container col-12 col-sm-6 offset-sm-3 shadow p-3 mb-5 bg-white rounded' style='margin-top:150px')
-            h1(style='text-align:center')='Login'
-            form(action='/signin' method='post' class='pt-sm-5')
-                div(class='form-group col-sm-10 offset-sm-1')
-                    label(for='siemail' class='col-form-label')='Email'
-                    input(type='email' class='form-control form-control-lg' id='siemail' placeholder='Enter email' name='siemail' required)
-                div(class='form-group col-sm-10 offset-sm-1')
-                    label(for='sipswd' class='col-form-label')='Password'
-                    input(type='password' class='form-control form-control-lg' id='sipswd' placeholder='Enter password' name='sipswd' required)
-                if(loginFailed)
-                    p(class='text-danger col-sm-10 offset-sm-1')='Invalid email or password'
-                div(class='d-flex justify-content-center pt-sm-3')
-                    button(type='submit' class='btn btn-dark')='Submit'
-                div(class='d-flex justify-content-center pt-sm-3' style='padding-bottom:50px')
-                    a(href='/signup')='Create new account'
-            
+                                a(href='/signin' style='font-size:22px; color:black; text-decoration:none')='Sign in'
+        div(class='container' style='margin-top:100px')
+            h2=`${challengeName} Leaderboard`
+            table(style='border-collapse:collapse ; width:100%') 
+                tr 
+                    th(style='border:1px solid #dddddd;text-align:left;padding:8px')='User'
+                    th(style='border:1px solid #dddddd;text-align:left;padding:8px')='Solved Problems'
+                    th(style='border:1px solid #dddddd;text-align:left;padding:8px')='Points'
+                - for (var i = 0; i < leaderBoard.length; i++){
+                    tr 
+                        td(style='border:1px solid #dddddd;text-align:left;padding:8px')
+                            a(href=`https://codeforces.com/profile/${leaderBoard[i][0]}` style='text-decoration: none')=leaderBoard[i][0]
+                        td(style='border:1px solid #dddddd;text-align:left;padding:8px')=`${leaderBoard[i][1]}`
+                        td(style='border:1px solid #dddddd;text-align:left;padding:8px')=`${leaderBoard[i][2]}`
+                - }

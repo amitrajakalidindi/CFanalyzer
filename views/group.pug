@@ -41,20 +41,32 @@ html
                                         a(class='dropdown-item' href='/signout')='Sign out'
                         else
                             li(class='nav-item')
-                                a(href='/signup' style='font-size:22px; color:black; text-decoration:none')='Sign up'
-        div(class='container col-12 col-sm-6 offset-sm-3 shadow p-3 mb-5 bg-white rounded' style='margin-top:150px')
-            h1(style='text-align:center')='Login'
-            form(action='/signin' method='post' class='pt-sm-5')
-                div(class='form-group col-sm-10 offset-sm-1')
-                    label(for='siemail' class='col-form-label')='Email'
-                    input(type='email' class='form-control form-control-lg' id='siemail' placeholder='Enter email' name='siemail' required)
-                div(class='form-group col-sm-10 offset-sm-1')
-                    label(for='sipswd' class='col-form-label')='Password'
-                    input(type='password' class='form-control form-control-lg' id='sipswd' placeholder='Enter password' name='sipswd' required)
-                if(loginFailed)
-                    p(class='text-danger col-sm-10 offset-sm-1')='Invalid email or password'
-                div(class='d-flex justify-content-center pt-sm-3')
-                    button(type='submit' class='btn btn-dark')='Submit'
-                div(class='d-flex justify-content-center pt-sm-3' style='padding-bottom:50px')
-                    a(href='/signup')='Create new account'
-            
+                                a(href='/signin' style='font-size:22px; color:black; text-decoration:none')='Sign in'
+        div(class='container' style='margin-top:100px')
+            div(class='row')
+                div(class='col-12 col-md-8 shadow p-3 mb-5 bg-white rounded')
+                    h1=`${groupName}`
+                    div(class='row row-cols-1')
+                        - for (var i = challengeList.length - 1; i >= 0; i--){
+                            div(class='col mb-4')
+                                div(class='card shadow bg-white rounded')
+                                    div(class='card-body')
+                                        h4(class='card-title')
+                                            a(href=`/groups/${groupId}/challenges/${challengeList[i]._id}` class='stretched-link' style='text-decoration: none')=challengeList[i].challengeName
+                        - }
+                div(class='col-12 col-md-4')
+                    div(class='shadow p-3 mb-5 bg-white rounded')
+                        h5="Create New Challenge"
+                        form(action=`/groups/${groupId}/createNewChallenge` method='post' class='pt-sm-5')
+                            div(class='form-group col-sm-10 offset-sm-1')
+                                label(for='challengeName' class='col-form-label')='Challenge name'
+                                input(type='text' class='form-control form-control-lg' id='challengeName' placeholder='Enter name' name='challengeName' required)
+                            div(class='form-group col-sm-10 offset-sm-1')
+                                label(for='startDate' class='col-form-label')='Start date'
+                                input(type='date' class='form-control form-control-lg' id='startDate' placeholder='Start date' name='startDate' required)
+                            div(class='form-group col-sm-10 offset-sm-1')
+                                label(for='endDate' class='col-form-label')='End date'
+                                input(type='date' class='form-control form-control-lg' id='endDate' placeholder='End date' name='endDate' required)
+                            div(class='d-flex justify-content-center pt-sm-3')
+                                button(type='submit' class='btn btn-dark')='Create'
+                            
