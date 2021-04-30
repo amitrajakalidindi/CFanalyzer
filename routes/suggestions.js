@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-	var username = "amruthkumar";
+	var username = req.cookies.user;
     var unsolved_tags=[],suggested_problems=[],unsolved=[];
     var rating;
 	function callback(){

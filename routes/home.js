@@ -13,13 +13,15 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
 	var username = req.body.username;
-	var verdictList = [], contestList = [], tagList = [], tagCountList = [], langList = [], langCountList = [], c_ratings=[],c_ratingscount=[],p_ratings=[],p_ratingscount=[];
+	var verdictList = [], verdictCountList = [], contestList = [], tagList = [], tagCountList = [], langList = [], langCountList = [], c_ratings=[],c_ratingscount=[],p_ratings=[],p_ratingscount=[];
 	var handle,rank,rating,maxrating,maxrank,noofcontests=0;
 	function callback(){
+		//leaderBoard.sort((a, b) => {return b[2] - a[2]});
 		res.render('home', {
 			username: req.cookies.user,
 			search: true,
-			problemVerdicts: verdictList,
+			verdicts: verdictList,
+			verdictsCount: verdictCountList,
 			problemscount: contestList,
 			tagList: tagList.toString().split(" ").join(""),
 			tagCountList: tagCountList,
@@ -114,7 +116,8 @@ router.post('/', (req, res) => {
 					me++;
 				}
 			}
-			verdictList = [ok, ce, re, wa, tle, me];
+			verdictList = ["CompilationError", "WrongAnswer", "RuntimeError", "Accepted", "TimeLimitExceded", "MemoryLimitExceded"];
+			verdictCountList = [ce, wa, re, ok, tle, me];
 
 			var langMap = new Map();
 			var language, cnt;
@@ -185,7 +188,7 @@ router.post('/', (req, res) => {
 			var p_ratingsmap = new Map();
 			for(var i=0;i<submissions.length;i++)
 			{
-				if(submissions[i].verdict!="OK")
+				if(submissions[i].verdict!="OK" || submissions[i].problem.rating == undefined)
 					continue;
 				if(submissions[i].author.participantType=="CONTESTANT")
 				{
@@ -215,15 +218,31 @@ router.post('/', (req, res) => {
 				}
 			}
 			
+			var ratingsList = []
 			for(const [key,value] of c_ratingsmap.entries())
 			{
-				c_ratings.push(key);
-				c_ratingscount.push(value);
+				var entry = [key, value];
+				ratingsList.push(entry);
 			}
+			ratingsList.sort((a, b) => {return a[0] - b[0]});
+
+			for(i = 0; i < ratingsList.length; i++){
+				c_ratings.push(ratingsList[i][0]);
+				c_ratingscount.push(ratingsList[i][1]);
+			}
+
+			ratingsList = []
 			for(const [key,value] of p_ratingsmap.entries())
 			{
-				p_ratings.push(key);
-				p_ratingscount.push(value);
+				var entry = [key, value];
+				ratingsList.push(entry);
+			}
+
+			ratingsList.sort((a, b) => {return a[0] - b[0]});
+
+			for(i = 0; i < ratingsList.length; i++){
+				p_ratings.push(ratingsList[i][0]);
+				p_ratingscount.push(ratingsList[i][1]);
 			}
 
 			callback();

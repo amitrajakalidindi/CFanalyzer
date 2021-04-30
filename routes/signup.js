@@ -64,13 +64,13 @@ router.post('/', (req, res) => {
                     var transporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
-                            user: 'cfanalyser@gmail.com',
-                            pass: 'amit955raja'
+                            user: 'cfanalyzer1@gmail.com',
+                            pass: '***'
                         }
                     });
         
                     var mailOptions = {
-                        from: 'cfanalyser@gmail.com',
+                        from: 'cfanalyzer1@gmail.com',
                         to: `${email}`,
                         subject: 'Account Verification for CFanalyser',
                         text: `Open link in browser to verify your account : http://localhost:3000/userVerification/${user._id} `

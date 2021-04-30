@@ -322,7 +322,6 @@ router.post('/', (req, res) => {
 				LangList.push(key.split(" ").join("").replace('*','').toString());
 				LangCountList.push(value);
 			}
-			console.log(LangList);
 
 			var tagMap = new Map();
 			var tag, cnt;
@@ -367,7 +366,6 @@ router.post('/', (req, res) => {
 			{
 				ContestList[value]+=1;
 			}
-			console.log(ContestList);
 			var c_ratingsmap = new Map();
 			var p_ratingsmap = new Map();
 			for(var i=0;i<submissions.length;i++)
