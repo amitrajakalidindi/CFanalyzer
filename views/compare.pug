@@ -13,7 +13,7 @@ html
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js')
         script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')
         script(src='https://kit.fontawesome.com/a076d05399.js')
-        script(src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0')
+        script(type='text/javascript' src='https://www.gstatic.com/charts/loader.js')
         title='CFanalyzer'
     body(style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'")
         nav(class='navbar navbar-expand-lg fixed-top justify-content-between navbar-light' style='background-color:Turquoise')
@@ -37,423 +37,165 @@ html
                     else
                         li(class='nav-item')
                             a(class='nav-link' href='/signin')='Sign in'
-        div(class='container col-12 col-sm-6 offset-sm-3 shadow p-3 mb-5 bg-white rounded' style='margin-top:100px')
+        div(class='container shadow col-sm-7 p-3 mb-5 bg-white rounded' style='margin-top:100px')
             form(action='/compare' method='post')
-                div(class='form-group col-sm-6 offset-sm-3')
-                    input(type='text' class='form-control form-control-lg' id='handle1' placeholder='Enter first handle' name='handle1' required)
-                    input(type='text' class='form-control form-control-lg' id='handle2' placeholder='Enter second handle' name='handle2' required)
-                input(type="submit" value="submit" )
+                div(class='form-group row col-12')
+                    if(handle)
+                        input(type='text' class='col-md-4 offset-md-2 form-control form-control-lg' id='handle1' value=`${handle}` placeholder='Enter first handle' name='handle1' required)
+                    else 
+                        input(type='text' class='col-md-4 offset-md-2 form-control form-control-lg' id='handle1' placeholder='Enter first handle' name='handle1' required)
+                    if(Handle)
+                        input(type='text' class='col-md-4 form-control form-control-lg' id='handle2' value=`${Handle}` placeholder='Enter second handle' name='handle2' required)
+                    else 
+                        input(type='text' class='col-md-4 form-control form-control-lg' id='handle2' placeholder='Enter second handle' name='handle2' required)
+                div(class='d-flex justify-content-center pt-sm-3')
+                    button(type='submit' class='btn btn-dark')='Compare'
 
         if(search)
             div(class='container d-flex justify-content-center')
-                table
-                    tr 
-                        td handle: 
-                        td #{handle}
-                        td #{Handle}
-                    tr 
-                        td rating:  
-                        td #{rating}
-                        td #{Rating}
-                    tr
-                        td maxrating:  
-                        td #{maxrating}
-                        td #{Maxrating}
-                    tr 
-                        td rank:  
-                        td #{rank}
-                        td #{Rank}
-                    tr
-                        td maxrank:  
-                        td #{maxrank}
-                        td #{Maxrank}
-                    tr 
-                        td no of contests:  
-                        td #{noofcontests}
-                        td #{Noofcontests}
-
-
-
-            div(class='container d-flex justify-content-center' style="float:center")
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    canvas(id='verdictChart')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    canvas(id='vverdictChart')
-            div(class='container d-flex justify-content-center' style="float:center")
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    canvas(id='langChart')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    canvas(id='LangChart')
-            div(class='container d-flex justify-content-center' style="float:center")    
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    input(type="button" onclick="uvpdate()" value="show practice tags" id="ratingsbutton")
-                    canvas(id='ratingschart')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    input(type="button" onclick="uupdate()" value="show practice tags" id="rratingsbutton")
-                    canvas(id='Ratingschart')
-            div(class='container d-flex justify-content-center' style="float:center")
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    p
-                    canvas(id='contestChart')
-                div(class='chart-container' style='margin-top:75px; padding:5px 5px 5px 5px;  height:300px; width:400px')
-                    p
-                    canvas(id='ContestChart')
-                
-
-
-        script.
-            var ctx = document.getElementById('verdictChart').getContext('2d');
-            var verdictChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Accepted', 'Compilation Error', 'Runtime Error', 'Wrong Answer', 'Time Limit Exceeded', 'Memory Limit Exceeded'],
-                    datasets: [{
-                        label: '# of Votes',
-                        data: Array(#{problemVerdicts}),
-                        backgroundColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });     
-        script.
-            var ctx = document.getElementById('langChart').getContext('2d');
-            var langChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Languages Used',
-                        data: Array(#{langCountList}),
-                        backgroundColor: [],
-                        borderColor: [],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-            
-            function addLangData() {
-                var langs = !{JSON.stringify(langList)};
-                langs = langs.split(",");
-                var r, g, b;
-                for(var i = 0; i < langs.length; i++){
-                    r = Math.round(Math.random()*255);
-                    g = Math.round(Math.random()*255);
-                    b = Math.round(Math.random()*255);
-                    if(langChart.data.datasets[0].backgroundColor.includes(`rgba(${r}, ${g}, ${b}, 0.5)`)){
-                        i--;
-                        continue;
-                    }
-                    langChart.data.datasets[0].backgroundColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`);
-                    langChart.data.datasets[0].borderColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`); 
-                    langChart.data.labels.push(langs[i]);              
-                }
-                langChart.update();
-            }
-
-            addLangData();
-            
-        script.
-            var ctx = document.getElementById('contestChart').getContext('2d');
-            var contestChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['0', '1', '2', '3', '4', '5','6','7','8'],
-                    datasets: [{
-                        label: 'Problems solved per  contest',
-                        data: Array(#{problemscount}),
-                        backgroundColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
+                table(class='table shadow p-3 mb-5 bg-white rounded' style='width:75%')
+                    thead(class='thead-dark')
+                        tr 
+                            th(scope='col')=''
+                            th(scope='col')= `${handle}`
+                            th(scope='col')= `${Handle}`
+                    tbody
+                        tr 
+                            th(scope='row')='No of contests'
+                            td= `${noofcontests}`
+                            td= `${Noofcontests}`
+                        tr 
+                            th(scope='row')='Number of Problems Solved'
+                            td= `${noOfProblemsSolved}`
+                            td= `${NoOfProblemsSolved}`
+                        tr 
+                            th(scope='row')='Accuracy'
+                            td= `${accuracy}`
+                            td= `${Accuracy}`
+                        tr 
+                            th(scope='row')='Average Attempts to Solve a Problem'
+                            td= `${avgAttempts}`
+                            td= `${AvgAttempts}`
+                        tr 
+                            th(scope='row')='Rank'
+                            td= `${rank}`
+                            td= `${Rank}`
+                        tr
+                            th(scope='row')='Max Rank'
+                            td= `${maxrank}`
+                            td= `${Maxrank}`
+                        tr 
+                            th(scope='row')='Rating'
+                            td= `${rating}`
+                            td= `${Rating}`
+                        tr
+                            th(scope='row')='Max Rating'
+                            td= `${maxrating}`
+                            td= `${Maxrating}`
+                        tr
+                            th(scope='row')='Min Rating'
+                            td= `${minrating}`
+                            td= `${Minrating}`
+                        tr
+                            th(scope='row')='Average Rating'
+                            td= `${avgrating}`
+                            td= `${Avgrating}`
+                        tr 
+                            th(scope='row')='Best Rank'
+                            td= `${bestRank}`
+                            td= `${BestRank}`
+                        tr 
+                            th(scope='row')='Worst Rank'
+                            td= `${worstRank}`
+                            td= `${WorstRank}`
         
-        
-        script.
-            var ctx = document.getElementById('ratingschart').getContext('2d');
-            var ratingschart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array(#{c_ratings}),
-                    datasets: [{
-                        label: 'Problems solved per contest',
-                        data: Array(#{c_ratingscount}),
-                        backgroundColor: 'red',
-                        borderColor: 'red',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            }); 
 
-            function uvpdate()
-            {
-                var elem = document.getElementById("ratingsbutton");
-                if(elem.value=="show contest tags")
-                {
-                    elem.value="show practice tags";
-                    ratingschart.data.labels=Array(#{c_ratings});
-                    ratingschart.data.datasets[0].data=Array(#{c_ratingscount});
-                    ratingschart.data.datasets[0].label='problems solved in contest';
-                    //ratingschart.data.labels=Array(#{c_ratings});
-                    ratingschart.update();
-                    
+            div(class='container d-flex justify-content-center shadow p-3 mb-5 bg-white rounded' id="practiceRatingsChart" style="width: 900px; height: 500px")
+            div(class='container d-flex justify-content-center shadow p-3 mb-5 bg-white rounded' id="contestRatingsChart" style="width: 900px; height: 500px")
+            div(class='container d-flex justify-content-center shadow p-3 mb-5 bg-white rounded' id="contestChart" style="width: 900px; height: 500px")
+           
+        script.
+            google.charts.load('current', {'packages':['bar']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var practiceRatings = Array(#{practiceRatings});
+                var p_ratingscount = Array(#{p_ratingscount});
+                var P_ratingscount = Array(#{P_ratingscount});
+                var handle = !{JSON.stringify(handle)};
+                var Handle = !{JSON.stringify(Handle)};
+                var ratingsList = [["Problem rating", handle, Handle]]
+                for(var i = 0; i < practiceRatings.length; i++){
+                    var element = [practiceRatings[i], p_ratingscount[i], P_ratingscount[i]];
+                    ratingsList.push(element);
                 }
-                else 
-                {
-                    elem.value="show contest tags";
-                    ratingschart.data.labels=Array(#{p_ratings});
-                    ratingschart.data.datasets[0].data=Array(#{p_ratingscount});
-                    ratingschart.data.datasets[0].label='problems solved in practice';
-                    //ratingschart.data.labels=Array(#{p_ratings});
-                    ratingschart.update();
-                    
-                }
+
+                var data = google.visualization.arrayToDataTable(ratingsList);
+
+                var options = {
+                    chart: {
+                        title: 'Ratings of Problems Solved in Practice',
+                    }
+                };
+
+                var chart = new google.charts.Bar(document.getElementById('practiceRatingsChart'));
+                chart.draw(data, google.charts.Bar.convertOptions(options));
             }
         
-        
-        //second user charts start here
-        //second
-        //second
-
-
         script.
-            var ctx = document.getElementById('vverdictChart').getContext('2d');
-            var verdictChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Accepted', 'Compilation Error', 'Runtime Error', 'Wrong Answer', 'Time Limit Exceeded', 'Memory Limit Exceeded'],
-                    datasets: [{
-                        label: '# of Votes',
-                        data: Array(#{vverdictList}),
-                        backgroundColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
+            google.charts.load('current', {'packages':['bar']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var contestRatings = Array(#{contestRatings});
+                var c_ratingscount = Array(#{c_ratingscount})
+                var C_ratingscount = Array(#{C_ratingscount})
+                var handle = !{JSON.stringify(handle)};
+                var Handle = !{JSON.stringify(Handle)};
+                var ratingsList = [["Problem rating", handle, Handle]]
+
+                for(var i = 0; i < contestRatings.length; i++){
+                    var element = [contestRatings[i], c_ratingscount[i], C_ratingscount[i]];
+                    ratingsList.push(element);
                 }
-            });     
-        script.
-            var ctx = document.getElementById('LangChart').getContext('2d');
-            var langChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Languages Used',
-                        data: Array(#{LangCountList}),
-                        backgroundColor: "red",
-                        borderColor: [],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
+                var data = google.visualization.arrayToDataTable(ratingsList);
+
+                var options = {
+                    chart: {
+                        title: 'Ratings of Problems Solved in Contest',
                     }
-                }
-            });
-            
-            function AddLangData() {
-                var langs = !{JSON.stringify(LangList)};
-                langs = langs.split(",");
-                var r, g, b;
-                for(var i = 0; i < langs.length; i++){
-                    r = Math.round(Math.random()*255);
-                    g = Math.round(Math.random()*255);
-                    b = Math.round(Math.random()*255);
-                    if(LangChart.data.datasets[0].backgroundColor.includes(`rgba(${r}, ${g}, ${b}, 0.5)`)){
-                        i--;
-                        continue;
-                    }
-                    LangChart.data.datasets[0].backgroundColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`);
-                    LangChart.data.datasets[0].borderColor.push(`rgba(${r}, ${g}, ${b}, 0.5)`); 
-                    LangChart.data.labels.push(langs[i]);              
-                }
-                LangChart.update();
+                };
+
+                var chart = new google.charts.Bar(document.getElementById('contestRatingsChart'));
+                chart.draw(data, google.charts.Bar.convertOptions(options));
             }
 
-            //AddLangData();
-            
         script.
-            var ctx = document.getElementById('ContestChart').getContext('2d');
-            var contestChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['0', '1', '2', '3', '4', '5','6','7','8'],
-                    datasets: [{
-                        label: 'Problems solved per  contest',
-                        data: Array(#{Problemscount}),
-                        backgroundColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 159, 64, 0.5)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-        
-        
-        script.
-            var ctx = document.getElementById('Ratingschart').getContext('2d');
-            var ratingschart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array(#{C_ratings}),
-                    datasets: [{
-                        label: 'Problems solved per contest',
-                        data: Array(#{C_ratingscount}),
-                        backgroundColor: 'red',
-                        borderColor: 'red',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            }); 
+            google.charts.load('current', {'packages':['bar']});
+            google.charts.setOnLoadCallback(drawChart);
 
-            function uupdate()
-            {
-                var elem = document.getElementById("rratingsbutton");
-                if(elem.value=="show contest tags")
-                {
-                    elem.value="show practice tags";
-                    Ratingschart.data.labels=Array(#{C_ratings});
-                    Ratingschart.data.datasets[0].data=Array(#{C_ratingscount});
-                    Ratingschart.data.datasets[0].label='problems solved in contest';
-                    //ratingschart.data.labels=Array(#{C_ratings});
-                    Ratingschart.update();
-                    
+            function drawChart() {
+                var solvedCount = ['0', '1', '2', '3', '4', '5','6','7','8'];
+                var problemscount = Array(#{problemscount});
+                var Problemscount = Array(#{Problemscount});
+                var handle = !{JSON.stringify(handle)};
+                var Handle = !{JSON.stringify(Handle)};
+                var countList = [["Number of problems Solved", handle, Handle]]
+                for(var i = 0; i < solvedCount.length; i++){
+                    var element = [solvedCount[i], problemscount[i], Problemscount[i]];
+                    countList.push(element);
                 }
-                else 
-                {
-                    elem.value="show contest tags";
-                    Ratingschart.data.labels=Array(#{P_ratings});
-                    Ratingschart.data.datasets[0].data=Array(#{P_ratingscount});
-                    Ratingschart.data.datasets[0].label='problems solved in practice';
-                    //ratingschart.data.labels=Array(#{P_ratings});
-                    Ratingschart.update();
-                    
-                }
+                var data = google.visualization.arrayToDataTable(countList);
+
+                var options = {
+                    chart: {
+                        title: 'Number of Problems Solved in Contest',
+                    }
+                };
+
+                var chart = new google.charts.Bar(document.getElementById('contestChart'));
+                chart.draw(data, google.charts.Bar.convertOptions(options));
             }
-        
-
-        
+    
+  
+                      

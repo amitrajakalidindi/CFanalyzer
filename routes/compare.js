@@ -14,50 +14,126 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
 	var handle1 = req.body.handle1;
     var handle2=req.body.handle2;
-	var verdictList = [], contestList = [], tagList = [], tagCountList = [], langList = [], langCountList = [], c_ratings=[],c_ratingscount=[],p_ratings=[],p_ratingscount=[];
-    var vverdictList = [], ContestList = [], TagList = [], TagCountList = [], LangList = [], LangCountList = [], C_ratings=[],C_ratingscount=[],P_ratings=[],P_ratingscount=[];
-	var handle,rank,rating,maxrating,maxrank,noofcontests=0;
-    var Handle,Rank,Rating,Maxrating,Maxrank,Noofcontests=0;
+	var contestList = [],c_ratingscount=[],p_ratingscount=[];
+    var ContestList = [],C_ratingscount=[],P_ratingscount=[];
+	var contestRatings = [], practiceRatings = [];
+	var handle,rank,rating,maxrating,minrating,avgrating,maxrank,accuracy,avgAttempts,noOfProblemsSolved,noofcontests,bestRank,worstRank;
+    var Handle,Rank,Rating,Maxrating,Minrating,Avgrating,Maxrank,Accuracy,AvgAttempts,NoOfProblemsSolved,Noofcontests,BestRank,WorstRank;
 	var count=0;
+	var c_ratingsmap = new Map();
+	var p_ratingsmap = new Map();
+	var C_ratingsmap = new Map();
+	var P_ratingsmap = new Map();
+	var contestRatingsMap = new Map();
+	var practiceRatingsMap = new Map();
 	function callback(){
 		count+=1;
 		if(count!=5)
 			return;
+
+		var contestarr = [];
+		var entry;
+		for(const [key,value] of c_ratingsmap.entries())
+		{
+			contestRatingsMap.set(key,true);
+			if(C_ratingsmap.has(key))
+			{
+				entry = [key, value, C_ratingsmap.get(key)];
+			}
+			else{
+				entry = [key, value, 0];
+			}
+			contestarr.push(entry);
+		}
+
+		for(const [key,value] of C_ratingsmap.entries())
+		{
+			if(contestRatingsMap.has(key)){
+				continue;
+			}
+			contestRatingsMap.set(key,true);
+			entry = [key, 0, value];
+			contestarr.push(entry);
+		}
+
+		contestarr.sort((a, b) => {return a[0] - b[0]});
+
+		var practicearr = [];
+		for(const [key,value] of p_ratingsmap.entries())
+		{
+			practiceRatingsMap.set(key,true);
+			if(P_ratingsmap.has(key))
+			{
+				entry = [key, value, P_ratingsmap.get(key)];
+			}
+			else{
+				entry = [key, value, 0];
+			}
+			practicearr.push(entry);
+		}
+
+		for(const [key,value] of P_ratingsmap.entries())
+		{
+			if(practiceRatingsMap.has(key)){
+				continue;
+			}
+			practiceRatingsMap.set(key,true);
+			entry = [key, 0, value];
+			practicearr.push(entry);
+		}
+
+		practicearr.sort((a, b) => {return a[0] - b[0]});
+
+		for(var i = 0; i < contestarr.length; i++){
+			contestRatings.push(contestarr[i][0]);
+			c_ratingscount.push(contestarr[i][1]);
+			C_ratingscount.push(contestarr[i][2]);
+		}
+
+		for(var i = 0; i < practicearr.length; i++){
+			practiceRatings.push(practicearr[i][0]);
+			p_ratingscount.push(practicearr[i][1]);
+			P_ratingscount.push(practicearr[i][2]);
+		}
+		
+
 		res.render('compare', {
 			username: req.cookies.user,
 			search: true,
-			problemVerdicts: verdictList,
-        	vverdictList: vverdictList,
 			problemscount: contestList,
 			Problemscount: ContestList,
-			tagList: tagList.toString().split(" ").join(""),
-			TagList: TagList.toString().split(" ").join(""),
-			tagCountList: tagCountList,
-			TagCountList: TagCountList,
-			langList: langList.toString().split(" ").join(""),
-			LangList: LangList.toString().split(" ").join(""),
-			langCountList: langCountList,
-			LangCountList: LangCountList,
+			contestRatings: contestRatings,
 			c_ratingscount: c_ratingscount,
 			C_ratingscount: C_ratingscount,
-			c_ratings: c_ratings,
-			C_ratings: C_ratings,
+			practiceRatings: practiceRatings,
 			p_ratingscount: p_ratingscount,
 			P_ratingscount: P_ratingscount,
-			p_ratings: p_ratings,
-			P_ratings: P_ratings,
 			handle:handle,
 			rank:rank,
 			rating:rating,
 			maxrating:maxrating,
+			minrating:minrating,
+			avgrating:avgrating,
 			maxrank:maxrank,
 			noofcontests:noofcontests,
+			accuracy:accuracy,
+			noOfProblemsSolved:noOfProblemsSolved,
+			avgAttempts:avgAttempts,
+			bestRank:bestRank,
+			worstRank:worstRank,
             Handle:Handle,
 			Rank:Rank,
 			Rating:Rating,
 			Maxrating:Maxrating,
+			Minrating:Minrating,
+			Avgrating:Avgrating,
 			Maxrank:Maxrank,
 			Noofcontests:Noofcontests,
+			Accuracy:Accuracy,
+			NoOfProblemsSolved:NoOfProblemsSolved,
+			AvgAttempts:AvgAttempts,
+			BestRank:BestRank,
+			WorstRank:WorstRank
 		});
 	}
 	function callback2(){
@@ -72,10 +148,26 @@ router.post('/', (req, res) => {
 		else 
 		{
 			var contests=body.result;
+			var sumOfRatings = 0
+			minrating = 5000;
+			bestRank = 100000;
+			worstRank = 0;
+			noofcontests = contests.length;
 			for(var i=0;i<contests.length;i++)
 			{
-				noofcontests+=1
+				sumOfRatings += contests[i].newRating;
+				if(contests[i].newRating < minrating){
+					minrating = contests[i].newRating;
+				}
+				if(contests[i].rank < bestRank){
+					bestRank = contests[i].rank;
+				}
+				if(contests[i].rank > worstRank){
+					worstRank = contests[i].rank;
+				}
 			}
+			avgrating = Math.round(sumOfRatings/noofcontests);
+
 			callback();
 		}
 	});
@@ -87,11 +179,25 @@ router.post('/', (req, res) => {
 		else 
 		{
 			var contests=body.result;
-            //console.log(contests);
+			var sumOfRatings = 0
+			Minrating = 5000;
+			BestRank = 100000;
+			WorstRank = 0;
+			Noofcontests = contests.length;
 			for(var i=0;i<contests.length;i++)
 			{
-				Noofcontests+=1
+				sumOfRatings += contests[i].newRating;
+				if(contests[i].newRating < Minrating){
+					Minrating = contests[i].newRating;
+				}
+				if(contests[i].rank < BestRank){
+					BestRank = contests[i].rank;
+				}
+				if(contests[i].rank > WorstRank){
+					WorstRank = contests[i].rank;
+				}
 			}
+			Avgrating = Math.round(sumOfRatings/Noofcontests);
 			callback();
 		}
 	});
@@ -130,74 +236,16 @@ router.post('/', (req, res) => {
 			callback2();
 		}
 		else{
-			var ok = 0, ce = 0, re = 0, wa = 0, tle = 0, me = 0;
+			var ok = 0;
 			var submissions = body.result;
 			for(var i = 0; i < submissions.length; i++){
 				if(submissions[i].verdict == 'OK'){
 					ok++;
 				}
-				if(submissions[i].verdict == 'COMPILATION_ERROR'){
-					ce++;
-				}
-				if(submissions[i].verdict == 'RUNTIME_ERROR'){
-					re++;
-				}
-				if(submissions[i].verdict == 'WRONG_ANSWER'){
-					wa++;
-				}
-				if(submissions[i].verdict == 'TIME_LIMIT_EXCEEDED'){
-					tle++;
-				}
-				if(submissions[i].verdict == 'MEMORY_LIMIT_EXCEEDED'){
-					me++;
-				}
 			}
-			verdictList = [ok, ce, re, wa, tle, me];
-
-			var langMap = new Map();
-			var language, cnt;
-			for(var i = 0; i < submissions.length; i++)
-			{
-				language = submissions[i].programmingLanguage;
-				if(langMap.has(language))
-				{
-					cnt = langMap.get(language);
-					langMap.set(language, cnt + 1);
-				}
-				else{
-					langMap.set(language, 1);
-				}
-			}
-
-			for(const [key,value] of langMap.entries())
-			{
-				langList.push(key.split(" ").join("").replace('*','').toString());
-				langCountList.push(value);
-			}
-
-
-			var tagMap = new Map();
-			var tag, cnt;
-			for(var i = 0; i < submissions.length; i++)
-			{
-				for(var j = 0; j < submissions[i].problem.tags.length; j++){
-					tag = submissions[i].problem.tags[j];
-					if(tagMap.has(tag))
-					{
-						cnt = tagMap.get(tag);
-						tagMap.set(tag, cnt + 1);
-					}
-					else{
-						tagMap.set(tag, 1);
-					}
-				}
-			}
-
-			for(const [key,value] of tagMap.entries())
-			{
-				tagList.push(key.split(" ").join("").replace('*','').toString());
-				tagCountList.push(value);
-			}
+			noOfProblemsSolved = ok;
+			accuracy = ((ok/submissions.length)*100).toFixed(1);
+			avgAttempts = (submissions.length/ok).toFixed(1);
 
 			contestList=[0,0,0,0,0,0,0,0,0];
 			var mymap = new Map();
@@ -219,11 +267,10 @@ router.post('/', (req, res) => {
 			{
 				contestList[value]+=1;
 			}
-			var c_ratingsmap = new Map();
-			var p_ratingsmap = new Map();
+			
 			for(var i=0;i<submissions.length;i++)
 			{
-				if(submissions[i].verdict!="OK")
+				if(submissions[i].verdict!="OK" || submissions[i].problem.rating == undefined)
 					continue;
 				if(submissions[i].author.participantType=="CONTESTANT")
 				{
@@ -252,25 +299,12 @@ router.post('/', (req, res) => {
 					}
 				}
 			}
-			
-			for(const [key,value] of c_ratingsmap.entries())
-			{
-				c_ratings.push(key);
-				c_ratingscount.push(value);
-			}
-			for(const [key,value] of p_ratingsmap.entries())
-			{
-				p_ratings.push(key);
-				p_ratingscount.push(value);
-			}
             callback();
 		}
 		
 	});  
 	
 	//second users api call starts here
-	//second user
-	//second user
 
 	request(`https://codeforces.com/api/user.status?handle=${handle2}`, { json: true }, (err, res, body) => {
 		if (err) { return console.log(err); }
@@ -278,73 +312,16 @@ router.post('/', (req, res) => {
 			callback2();
 		}
 		else{
-			var ok = 0, ce = 0, re = 0, wa = 0, tle = 0, me = 0;
+			var ok = 0;
 			var submissions = body.result;
 			for(var i = 0; i < submissions.length; i++){
 				if(submissions[i].verdict == 'OK'){
 					ok++;
 				}
-				if(submissions[i].verdict == 'COMPILATION_ERROR'){
-					ce++;
-				}
-				if(submissions[i].verdict == 'RUNTIME_ERROR'){
-					re++;
-				}
-				if(submissions[i].verdict == 'WRONG_ANSWER'){
-					wa++;
-				}
-				if(submissions[i].verdict == 'TIME_LIMIT_EXCEEDED'){
-					tle++;
-				}
-				if(submissions[i].verdict == 'MEMORY_LIMIT_EXCEEDED'){
-					me++;
-				}
 			}
-			vverdictList = [ok, ce, re, wa, tle, me];
-
-			var langMap = new Map();
-			var language, cnt;
-			for(var i = 0; i < submissions.length; i++)
-			{
-				language = submissions[i].programmingLanguage;
-				if(langMap.has(language))
-				{
-					cnt = langMap.get(language);
-					langMap.set(language, cnt + 1);
-				}
-				else{
-					langMap.set(language, 1);
-				}
-			}
-
-			for(const [key,value] of langMap.entries())
-			{
-				LangList.push(key.split(" ").join("").replace('*','').toString());
-				LangCountList.push(value);
-			}
-
-			var tagMap = new Map();
-			var tag, cnt;
-			for(var i = 0; i < submissions.length; i++)
-			{
-				for(var j = 0; j < submissions[i].problem.tags.length; j++){
-					tag = submissions[i].problem.tags[j];
-					if(tagMap.has(tag))
-					{
-						cnt = tagMap.get(tag);
-						tagMap.set(tag, cnt + 1);
-					}
-					else{
-						tagMap.set(tag, 1);
-					}
-				}
-			}
-
-			for(const [key,value] of tagMap.entries())
-			{
-				TagList.push(key.split(" ").join("").replace('*','').toString());
-				TagCountList.push(value);
-			}
+			NoOfProblemsSolved = ok;
+			Accuracy = ((ok/submissions.length)*100).toFixed(1);
+			AvgAttempts = (submissions.length/ok).toFixed(1);
 
 			ContestList=[0,0,0,0,0,0,0,0,0];
 			var mymap = new Map();
@@ -366,50 +343,39 @@ router.post('/', (req, res) => {
 			{
 				ContestList[value]+=1;
 			}
-			var c_ratingsmap = new Map();
-			var p_ratingsmap = new Map();
+
 			for(var i=0;i<submissions.length;i++)
 			{
-				if(submissions[i].verdict!="OK")
+				if(submissions[i].verdict!="OK" || submissions[i].problem.rating == undefined)
 					continue;
 				if(submissions[i].author.participantType=="CONTESTANT")
 				{
-					if(c_ratingsmap.has(submissions[i].problem.rating))
+					if(C_ratingsmap.has(submissions[i].problem.rating))
 					{
-						var a=c_ratingsmap.get(submissions[i].problem.rating);
-						c_ratingsmap.set(submissions[i].problem.rating,a+1);
+						var a=C_ratingsmap.get(submissions[i].problem.rating);
+						C_ratingsmap.set(submissions[i].problem.rating,a+1);
 					}
 						
 					else 
 					{
-						c_ratingsmap.set(submissions[i].problem.rating,1);
+						C_ratingsmap.set(submissions[i].problem.rating,1);
 					}
 				}
 				else 
 				{
-					if(p_ratingsmap.has(submissions[i].problem.rating))
+					if(P_ratingsmap.has(submissions[i].problem.rating))
 					{
-						var a=p_ratingsmap.get(submissions[i].problem.rating);
-						p_ratingsmap.set(submissions[i].problem.rating,a+1);
+						var a=P_ratingsmap.get(submissions[i].problem.rating);
+						P_ratingsmap.set(submissions[i].problem.rating,a+1);
 					}
 						
 					else 
 					{
-						p_ratingsmap.set(submissions[i].problem.rating,1);
+						P_ratingsmap.set(submissions[i].problem.rating,1);
 					}
 				}
 			}
 			
-			for(const [key,value] of c_ratingsmap.entries())
-			{
-				C_ratings.push(key);
-				C_ratingscount.push(value);
-			}
-			for(const [key,value] of p_ratingsmap.entries())
-			{
-				P_ratings.push(key);
-				P_ratingscount.push(value);
-			}
             callback();
 		}
 		

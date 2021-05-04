@@ -4,20 +4,16 @@ const path = require('path');
 const request = require('request');
 
 router.get('/', (req, res) => {
-	res.render('suggestions', {
-        sub:false,
-		username: req.cookies.user,
-	});
-});
-
-router.post('/', (req, res) => {
 	var username = req.cookies.user;
+    if(!username){
+        res.redirect('/signin');
+        return;
+    }
     var unsolved_tags=[],suggested_problems=[],unsolved=[];
     var rating;
 	function callback(){
         suggested_problems.sort(function(a,b){return a[4]-b[4]});
 		res.render('suggestions', {
-            sub:true,
 			username: req.cookies.user,
             suggested_problems:suggested_problems,
             unsolved:unsolved

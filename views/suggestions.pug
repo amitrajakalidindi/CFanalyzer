@@ -36,44 +36,41 @@ html
                             a(class='nav-link' href='/signin')='Sign in'
 
         div(class='container d-flex justify-content-center' style="float:center; margin-top:100px")
-            form(action='/suggestions' method='post')
-                input(type="submit" value="Get recomended problems" )
-        if(sub)
-            div(class='container d-flex justify-content-center' style="float:center; margin-top:100px")
-                h3 Suggested Problems
-            div(class='container d-flex justify-content-center' style="float:center; margin-top:10px")
-                table
+            h3 Suggested Problems
+        div(class='container d-flex justify-content-center' style="float:center; margin-top:10px")
+            table(class='table shadow p-3 mb-5 bg-white rounded' style='width:100%')
+                thead(class='thead-dark')
                     tr 
-                        td problem 
-                        td contest 
-                        td level 
-                        td rating
-
+                        th(scope='col')="Problem"
+                        th(scope='col')="Contest"
+                        th(scope='col')="Level" 
+                        th(scope='col')="Rating"
+                tbody
                     each i in suggested_problems
                         tr
-                            td 
-                                a(href=`${i[0]}`) #{i[1]}
-                            td #{i[2]}   
-                            td #{i[3]} 
-                            td #{i[4]} 
-            div(class='container d-flex justify-content-center' style="float:center; margin-top:100px")
-                    h3 Unsolved problems in contests 
-            div(class='container d-flex justify-content-center' style="float:center; margin-top:10px")
-                div
-                    table
-                        tr 
-                            td problem 
-                            td contest 
-                            td level 
-                            td rating
-
-                        each i in unsolved
-                            tr
-                                td 
-                                    a(href=`${i[0]}`) #{i[1]}
-                                td #{i[2]}   
-                                td #{i[3]} 
-                                td #{i[4]} 
+                            td
+                                a(href=`${i[0]}` style='text-decoration: none')=`${i[1]}`
+                            td=`${i[2]}`   
+                            td=`${i[3]}` 
+                            td=`${i[4]}`
+        div(class='container d-flex justify-content-center' style="float:center; margin-top:100px")
+                h3 Unsolved problems in contests 
+        div(class='container d-flex justify-content-center' style="float:center; margin-top:10px")
+            table(class='table shadow p-3 mb-5 bg-white rounded' style='width:100%')
+                thead(class='thead-dark')
+                    tr 
+                        th(scope='col')="Problem"
+                        th(scope='col')="Contest"
+                        th(scope='col')="Level" 
+                        th(scope='col')="Rating"
+                tbody
+                    each i in unsolved
+                        tr
+                            td
+                                a(href=`${i[0]}` style='text-decoration: none')=`${i[1]}`
+                            td=`${i[2]}`   
+                            td=`${i[3]}` 
+                            td=`${i[4]}` 
             
 
                     
