@@ -10,11 +10,10 @@ html
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js')
         script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')
         script(src='https://kit.fontawesome.com/a076d05399.js')
-        script(src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0')
-        title='CFanalyzer'
+        title='CFvisualizer'
     body(style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'")
         nav(class='navbar navbar-expand-lg fixed-top justify-content-between navbar-light' style='background-color:Turquoise')
-            a(class='navbar-brand' href='/')='CFanalyzer'
+            a(class='navbar-brand' href='/')='CFvisualizer'
             button(class='navbar-toggler' type='button' data-toggle='collapse' data-target='#collapsibleNavbar')
                     span(class='navbar-toggler-icon')
             div(class='collapse navbar-collapse' id='collapsibleNavbar')
@@ -34,7 +33,7 @@ html
                     else
                         li(class='nav-item')
                             a(class='nav-link' href='/signin')='Sign in'
-        div(class='container col-12 col-sm-6 offset-sm-3 shadow p-3 mb-5 bg-white rounded' style='margin-top:100px')
+        div(class='container col-12 col-sm-4 offset-sm-4 shadow p-3 mb-5 bg-white rounded' style='margin-top:100px')
             h1(style='text-align:center')='Sign up'
             form(action='/signup' method='post' class='pt-sm-5')
                 if(usernameExist)
@@ -54,15 +53,15 @@ html
                 if(emailExist)
                     div(class='form-group col-sm-10 offset-sm-1')
                         label(for='email' class='col-form-label')='Email'
-                        input(type='email' class='form-control form-control-lg is-invalid' id='email' placeholder='Enter email' value=`${erremail}` name='email' required)
+                        input(type='email' class='form-control form-control-lg is-invalid' id='email' placeholder='Enter your email' value=`${erremail}` name='email' required)
                         div(class='invalid-feedback offset-sm-4')='Email already registered.'
                 else
                     div(class='form-group col-sm-10 offset-sm-1')
                         label(for='email' class='col-form-label')='Email'
-                        input(type='email' class='form-control form-control-lg' id='email' placeholder='Enter email' name='email' required)
+                        input(type='email' class='form-control form-control-lg' id='email' placeholder='Enter your email' name='email' required)
                 div(class='form-group col-sm-10 offset-sm-1')
                     label(for='pwd' class='col-form-label')='Password'
-                    input(type='password' class='form-control form-control-lg' id='pwd' placeholder='Enter password' name='pswd' required)
+                    input(type='password' class='form-control form-control-lg' id='pwd' placeholder='Enter your password' name='pswd' required)
                 div(class='d-flex justify-content-center pt-sm-3')
                     button(type='submit' class='btn btn-dark')='Submit'
                 div(class='d-flex justify-content-center pt-sm-3' style='padding-bottom:50px')
