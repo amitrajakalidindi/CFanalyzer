@@ -40,6 +40,7 @@ router.post('/', (req, res) => {
 		});
 	}
 	function callback2(){
+		console.log("User not found");
 		res.redirect('/');
 	}
 	request(`https://codeforces.com/api/user.rating?handle=${username}`, { json: true }, (err, res, body) => {
