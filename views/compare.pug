@@ -41,13 +41,13 @@ html
             form(action='/compare' method='post')
                 div(class='form-group row col-12')
                     if(handle)
-                        input(type='text' class='col-md-4 offset-md-2 form-control form-control-lg' id='handle1' value=`${handle}` placeholder='Enter first handle' name='handle1' required)
+                        input(type='text' class='col-md-4 offset-md-2 form-control form-control-lg' id='handle1' value=`${handle}` placeholder='Enter first handle' name='handle1' autocomplete='off' required)
                     else 
-                        input(type='text' class='col-md-4 offset-md-2 form-control form-control-lg' id='handle1' placeholder='Enter first handle' name='handle1' required)
+                        input(type='text' class='col-md-4 offset-md-2 form-control form-control-lg' id='handle1' placeholder='Enter first handle' name='handle1' autocomplete='off' required)
                     if(Handle)
-                        input(type='text' class='col-md-4 form-control form-control-lg' id='handle2' value=`${Handle}` placeholder='Enter second handle' name='handle2' required)
+                        input(type='text' class='col-md-4 form-control form-control-lg' id='handle2' value=`${Handle}` placeholder='Enter second handle' name='handle2' autocomplete='off' required)
                     else 
-                        input(type='text' class='col-md-4 form-control form-control-lg' id='handle2' placeholder='Enter second handle' name='handle2' required)
+                        input(type='text' class='col-md-4 form-control form-control-lg' id='handle2' placeholder='Enter second handle' name='handle2' autocomplete='off' required)
                 div(class='d-flex justify-content-center pt-sm-3')
                     button(type='submit' class='btn btn-dark')='Compare'
 

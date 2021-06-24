@@ -38,9 +38,9 @@ html
             form(action='/' method='post')
                 div(class='form-group col-sm-6 offset-sm-3')
                     if(handle)
-                        input(type='text' class='form-control form-control-lg' id='username' value=`${handle}` name='username' required)
+                        input(type='text' class='form-control form-control-lg' id='username' value=`${handle}` name='username' autocomplete='off' required)
                     else 
-                        input(type='text' class='form-control form-control-lg' id='username' placeholder='Enter a user name' name='username' required)
+                        input(type='text' class='form-control form-control-lg' id='username' placeholder='Enter a user name' name='username' autocomplete='off' required)
 
         if(search)
             div(class='container d-flex justify-content-center')
