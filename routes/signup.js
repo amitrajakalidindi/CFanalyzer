@@ -65,7 +65,7 @@ router.post('/', (req, res) => {
                         service: 'gmail',
                         auth: {
                             user: 'cfanalyzer1@gmail.com',
-                            pass: 'cfanalyzer1@1581'
+                            pass: '*******'
                         }
                     });
         
